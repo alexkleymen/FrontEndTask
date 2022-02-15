@@ -16,12 +16,22 @@ function App() {
           },
         }
       );
+
       const resolved = await booksList.json();
+      if (resolved.totalItems === 0) {
+        setBooks([]);
+        return false;
+      }
       const bookList = resolved.items.map((el) => {
+        let title = el.volumeInfo?.title;
+        let description = el.volumeInfo?.description;
+        let img = el.volumeInfo?.imageLinks?.thumbnail;
+        let id = el.id;
         return {
-          title: el.volumeInfo.title,
-          description: el.volumeInfo.description,
-          img: el.volumeInfo.imageLinks.thumbnail,
+          title,
+          description,
+          img,
+          id,
         };
       });
       setBooks(bookList);
@@ -49,7 +59,7 @@ function App() {
       <button onClick={SearchBooks}>Search!</button>
       <div className="main">
         {books.map((book) => {
-          return <Stories data={book} />;
+          return <Stories key={book.id} data={book} />;
         })}
       </div>
     </div>
